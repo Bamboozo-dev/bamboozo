@@ -15,8 +15,28 @@
 		<div class="container">
 			<h2 id="welcomeTitle">Welcome!</h2>
 			<p id="userInfo"></p>
-			<button id="logoutBtn">Logout</button>
-			<a href="products.html" style="margin-left: 10px">Product Management</a>
+			<div
+				style="
+					display: flex;
+					gap: 10px;
+					align-items: center;
+					margin-bottom: 20px;
+				"
+			>
+				<button id="logoutBtn">Logout</button>
+				<a
+					href="products.html"
+					style="
+						background: #28a745;
+						color: white;
+						padding: 8px 16px;
+						border-radius: 4px;
+						text-decoration: none;
+						font-size: 0.9rem;
+					"
+					>📦 Product Management</a
+				>
+			</div>
 			<!-- Users table will be injected by JS -->
 		</div>
 		<script src="user-management.js"></script>

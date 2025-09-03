@@ -5,14 +5,37 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Product Management</title>
 		<link rel="stylesheet" href="style.css" />
+		<script src="https://unpkg.com/@ericblade/quagga2@1.2.6/dist/quagga.min.js"></script>
 		<link rel="stylesheet" href="file-upload-styles.css" />
 	</head>
 	<body>
 		<div class="container">
 			<h2>Product Management</h2>
 			<p id="userInfo"></p>
-			<button id="logoutBtn">Logout</button>
-			<!-- Navigation will be added by JS based on role -->
+			<div
+				style="
+					display: flex;
+					gap: 10px;
+					align-items: center;
+					margin-bottom: 20px;
+				"
+			>
+				<button id="logoutBtn">Logout</button>
+				<div id="adminNav" style="display: none">
+					<a
+						href="user.html"
+						style="
+							background: #007bff;
+							color: white;
+							padding: 8px 16px;
+							border-radius: 4px;
+							text-decoration: none;
+							font-size: 0.9rem;
+						"
+						>👥 User Management</a
+					>
+				</div>
+			</div>
 
 			<!-- Add new product form -->
 			<div
@@ -32,6 +55,43 @@
 						placeholder="Description"
 						required
 					/>
+					<div style="display: flex; gap: 10px; align-items: center">
+						<input
+							type="text"
+							name="barcode"
+							id="barcodeInput"
+							placeholder="Barcode (scan or type)"
+							style="flex: 1"
+						/>
+						<button type="button" id="scanBarcodeBtn" class="scan-btn">
+							<svg
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="currentColor"
+							>
+								<path
+									d="M3,5A2,2 0 0,1 5,3H7V5H5V7H3V5M9,3H15V5H9V3M17,3H19A2,2 0 0,1 21,5V7H19V5H17V3M21,9V15H19V9H21M21,17V19A2,2 0 0,1 19,21H17V19H19V17H21M15,21V19H9V21H15M7,21H5A2,2 0 0,1 3,19V17H5V19H7V21M3,15H5V9H3V15Z"
+								/>
+							</svg>
+							Scan
+						</button>
+					</div>
+					<!-- Barcode camera modal container for QuaggaJS -->
+					<div id="cameraContainer" style="margin-top: 20px; display: none">
+						<div
+							id="barcodeVideoContainer"
+							style="
+								width: 100%;
+								height: 200px;
+								border-radius: 8px;
+								background: #222;
+							"
+						></div>
+						<p style="font-size: 14px; color: #666; margin-top: 10px">
+							Point camera at barcode
+						</p>
+					</div>
 					<input
 						type="number"
 						name="price"
@@ -96,6 +156,8 @@
 
 			<!-- Products table will be injected by JS -->
 		</div>
+		<!-- Add Quagga.js for barcode scanning -->
+		<script src="barcode-scanner.js"></script>
 		<script src="product-management.js"></script>
 	</body>
 </html>

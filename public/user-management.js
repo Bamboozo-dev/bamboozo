@@ -11,7 +11,9 @@ if (user.role !== "admin") {
 }
 
 document.getElementById("welcomeTitle").textContent = `Welcome, ${user.name}!`;
-document.getElementById("userInfo").textContent = `Email: ${user.email}`;
+document.getElementById("userInfo").textContent = `Email: ${
+	user.email
+} - Role: ${user.role.toUpperCase()}`;
 
 document.getElementById("logoutBtn").onclick = function () {
 	localStorage.removeItem("user");

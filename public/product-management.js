@@ -5,13 +5,14 @@ if (!user || !token) {
 	window.location.href = "signin.html";
 }
 
-// Check if user is regular user, redirect if admin
+document.getElementById("userInfo").textContent = `Logged in as: ${
+	user.name
+} (${user.email}) - ${user.role.toUpperCase()}`;
+
+// Show admin navigation if user is admin
 if (user.role === "admin") {
-	window.location.href = "user.html";
+	document.getElementById("adminNav").style.display = "block";
 }
-document.getElementById(
-	"userInfo"
-).textContent = `Logged in as: ${user.name} (${user.email})`;
 
 document.getElementById("logoutBtn").onclick = function () {
 	localStorage.removeItem("user");
@@ -104,7 +105,7 @@ async function renderProducts() {
 		.join("");
 
 	table.innerHTML =
-		`<tr><th>Name</th><th>Description</th><th>Price</th><th>Category</th><th>Stock</th><th>Image</th><th>Actions</th></tr>` +
+		`<tr><th>Name</th><th>Description</th><th>Price</th><th>Category</th><th>Stock</th><th>Barcode</th><th>Image</th><th>Actions</th></tr>` +
 		products
 			.map(
 				(p) => `<tr>
@@ -126,6 +127,9 @@ async function renderProducts() {
           </select>
         </td>
         <td><input value="${p.stock}" min="0" id="stock-${p._id}" /></td>
+        <td><input value="${p.barcode || ""}" id="barcode-${
+					p._id
+				}" placeholder="Barcode" /></td>
         <td>
           ${
 						p.imageUrl
@@ -143,64 +147,153 @@ async function renderProducts() {
 }
 
 // Add new product handler
-document
-	.getElementById("addProductForm")
-	.addEventListener("submit", async function (e) {
-		e.preventDefault();
-		const formData = new FormData(e.target);
+const addProductForm = document.getElementById("addProductForm");
+addProductForm.addEventListener("submit", async function (e) {
+	e.preventDefault();
+	const formData = new FormData(e.target);
 
-		let imageUrl = null;
-		const imageFile = formData.get("image");
+	let imageUrl = null;
+	const imageFile = formData.get("image");
 
-		// Upload image if selected
-		if (imageFile && imageFile.size > 0) {
-			const uploadFormData = new FormData();
-			uploadFormData.append("image", imageFile);
+	// Show loading indicator
+	let loadingDiv = document.getElementById("imageUploadLoading");
+	if (!loadingDiv) {
+		loadingDiv = document.createElement("div");
+		loadingDiv.id = "imageUploadLoading";
+		loadingDiv.textContent = "Uploading image...";
+		loadingDiv.style.cssText = `
+			padding: 10px 18px;
+			margin: 10px 0;
+			border-radius: 6px;
+			background: #e3f2fd;
+			color: #007bff;
+			font-weight: 500;
+			text-align: center;
+		`;
+		addProductForm.parentNode.insertBefore(
+			loadingDiv,
+			addProductForm.nextSibling
+		);
+	}
+	loadingDiv.style.display = "block";
 
-			const uploadRes = await fetch("/api/upload/upload", {
-				method: "POST",
-				headers: { Authorization: "Bearer " + token },
-				body: uploadFormData,
-			});
+	// Upload image if selected
+	if (imageFile && imageFile.size > 0) {
+		const uploadFormData = new FormData();
+		uploadFormData.append("image", imageFile);
 
-			if (uploadRes.ok) {
-				const uploadResult = await uploadRes.json();
-				imageUrl = uploadResult.imageUrl;
-			} else {
-				showMessage("Failed to upload image.", "error");
-				return;
+		// Create progress indicator
+		const progressContainer = document.createElement("div");
+		progressContainer.style.cssText = `
+			width: 100%;
+			background-color: #e0e0e0;
+			border-radius: 4px;
+			margin: 10px 0;
+			height: 20px;
+			overflow: hidden;
+		`;
+
+		const progressBar = document.createElement("div");
+		progressBar.style.cssText = `
+			width: 0%;
+			height: 100%;
+			background-color: #4CAF50;
+			text-align: center;
+			line-height: 20px;
+			color: white;
+			transition: width 0.3s ease;
+		`;
+		progressContainer.appendChild(progressBar);
+
+		// Add progress indicator below loading text
+		loadingDiv.innerHTML = "Uploading image...";
+		loadingDiv.appendChild(progressContainer);
+
+		// Use XMLHttpRequest for progress monitoring
+		const xhr = new XMLHttpRequest();
+		xhr.open("POST", "/api/upload/upload", true);
+		xhr.setRequestHeader("Authorization", "Bearer " + token);
+
+		// Update progress bar during upload
+		xhr.upload.onprogress = function (e) {
+			if (e.lengthComputable) {
+				const percentComplete = Math.round((e.loaded / e.total) * 100);
+				progressBar.style.width = percentComplete + "%";
+				progressBar.textContent = percentComplete + "%";
 			}
-		}
-
-		const productData = {
-			name: formData.get("name"),
-			description: formData.get("description"),
-			price: parseFloat(formData.get("price")),
-			category: formData.get("category"),
-			stock: parseInt(formData.get("stock")),
 		};
 
-		if (imageUrl) productData.imageUrl = imageUrl;
+		// Handle upload completion
+		const uploadPromise = new Promise((resolve, reject) => {
+			xhr.onload = function () {
+				if (xhr.status >= 200 && xhr.status < 300) {
+					try {
+						const data = JSON.parse(xhr.responseText);
+						resolve(data);
+					} catch (e) {
+						reject(new Error("Invalid response format"));
+					}
+				} else {
+					reject(new Error("Upload failed with status: " + xhr.status));
+				}
+			};
+			xhr.onerror = function () {
+				reject(new Error("Network error during upload"));
+			};
+		});
 
-		const result = await createProduct(productData);
-		if (result) {
-			showMessage("Product created successfully!", "success");
-			e.target.reset();
-			const status = document.getElementById("imageStatus");
-			status.textContent = "No image selected";
-			status.classList.remove("selected");
+		// Send the request
+		xhr.send(uploadFormData);
 
-			// Hide image preview
-			const previewContainer = document.getElementById("imagePreviewContainer");
-			const preview = document.getElementById("imagePreview");
-			previewContainer.style.display = "none";
-			preview.src = "";
-
-			renderProducts();
-		} else {
-			showMessage("Failed to create product.", "error");
+		try {
+			// Wait for upload to complete
+			const uploadResult = await uploadPromise;
+			imageUrl = uploadResult.imageUrl;
+			loadingDiv.style.display = "none";
+		} catch (error) {
+			loadingDiv.style.display = "none";
+			showMessage("Failed to upload image: " + error.message, "error");
+			return;
 		}
-	});
+	} else {
+		loadingDiv.style.display = "none";
+	}
+
+	const productData = {
+		name: formData.get("name"),
+		description: formData.get("description"),
+		price: parseFloat(formData.get("price")),
+		category: formData.get("category"),
+		stock: parseInt(formData.get("stock")),
+	};
+
+	// Add barcode if provided
+	const barcode = formData.get("barcode");
+	if (barcode && barcode.trim()) {
+		productData.barcode = barcode.trim();
+	}
+
+	if (imageUrl) productData.imageUrl = imageUrl;
+
+	const result = await createProduct(productData);
+	if (result) {
+		showMessage("Product created successfully!", "success");
+		e.target.reset();
+		const status = document.getElementById("imageStatus");
+		status.textContent = "No image selected";
+		status.classList.remove("selected");
+
+		// Hide image preview
+		const previewContainer = document.getElementById("imagePreviewContainer");
+		const preview = document.getElementById("imagePreview");
+		previewContainer.style.display = "none";
+		preview.src = "";
+
+		renderProducts();
+	} else {
+		showMessage("Failed to create product.", "error");
+	}
+});
 
 window.updateProductHandler = async function (id) {
 	const name = document.getElementById(`name-${id}`).value;
@@ -208,8 +301,14 @@ window.updateProductHandler = async function (id) {
 	const price = parseFloat(document.getElementById(`price-${id}`).value);
 	const category = document.getElementById(`category-${id}`).value;
 	const stock = parseInt(document.getElementById(`stock-${id}`).value);
+	const barcode = document.getElementById(`barcode-${id}`).value;
 
 	const updateData = { name, description, price, category, stock };
+
+	// Add barcode if provided
+	if (barcode && barcode.trim()) {
+		updateData.barcode = barcode.trim();
+	}
 
 	const result = await updateProduct(id, updateData);
 	if (result) {
@@ -254,6 +353,23 @@ container.appendChild(table);
 // Initialize page
 loadCategoriesIntoForm();
 renderProducts();
+
+// Barcode scanning functionality
+document
+	.getElementById("scanBarcodeBtn")
+	.addEventListener("click", function () {
+		// Check if the separate barcode module exists
+		if (typeof showBarcodeScanner === "function") {
+			showBarcodeScanner();
+		} else {
+			// Fallback to simple manual input
+			const barcode = prompt("Enter barcode manually:");
+			if (barcode && barcode.trim()) {
+				document.getElementById("barcodeInput").value = barcode.trim();
+				showMessage("Barcode added: " + barcode.trim(), "success");
+			}
+		}
+	});
 
 // Add image file input change handler
 document.getElementById("imageInput").addEventListener("change", function (e) {

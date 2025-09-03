@@ -66,3 +66,37 @@
 	outline: 2px solid #667eea;
 	outline-offset: 2px;
 }
+
+/* Barcode Scanner Styles */
+.scan-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 12px !important;
+	background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+	color: white !important;
+	border-radius: 6px !important;
+	cursor: pointer;
+	font-size: 0.85rem !important;
+	font-weight: 500;
+	border: none !important;
+	transition: all 0.3s ease;
+	box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+	min-width: auto !important;
+	height: auto !important;
+}
+
+.scan-btn:hover {
+	background: linear-gradient(135deg, #218838 0%, #1e7e34 100%) !important;
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.scan-btn:active {
+	transform: translateY(0);
+}
+
+.scan-btn svg {
+	width: 16px;
+	height: 16px;
+}
