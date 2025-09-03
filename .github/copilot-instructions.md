@@ -1,0 +1,8 @@
+- [x] Clarify Project Requirements: Node.js Express server with MongoDB, users API only (CRUD).
+- [x] Scaffold the Project: Project files and folders created (Express, Mongoose, Users API only)
+- [ ] Customize the Project
+- [ ] Install Required Extensions (none required)
+- [x] Compile the Project: Dependencies installed, server started successfully
+- [ ] Create and Run Task
+- [ ] Launch the Project
+- [ ] Ensure Documentation is Complete

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Product Management</title>
+		<link rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="file-upload-styles.css" />
+	</head>
+	<body>
+		<div class="container">
+			<h2>Product Management</h2>
+			<p id="userInfo"></p>
+			<button id="logoutBtn">Logout</button>
+			<!-- Navigation will be added by JS based on role -->
+
+			<!-- Add new product form -->
+			<div
+				style="
+					margin: 20px 0;
+					padding: 20px;
+					background: #f8f9fa;
+					border-radius: 8px;
+				"
+			>
+				<h3>Add New Product</h3>
+				<form id="addProductForm">
+					<input type="text" name="name" placeholder="Product Name" required />
+					<input
+						type="text"
+						name="description"
+						placeholder="Description"
+						required
+					/>
+					<input
+						type="number"
+						name="price"
+						placeholder="Price"
+						step="0.01"
+						min="0"
+						required
+					/>
+					<select name="category" id="categorySelect" required>
+						<option value="">Select Category</option>
+					</select>
+					<input
+						type="number"
+						name="stock"
+						placeholder="Stock Quantity"
+						min="0"
+						required
+					/>
+					<div style="display: flex; gap: 10px; align-items: center">
+						<div class="custom-file-upload">
+							<input
+								type="file"
+								name="image"
+								accept="image/*"
+								id="imageInput"
+							/>
+							<label for="imageInput" class="file-upload-label">
+								<svg
+									class="upload-icon"
+									viewBox="0 0 24 24"
+									width="20"
+									height="20"
+								>
+									<path
+										d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"
+									/>
+								</svg>
+								Choose Image
+							</label>
+						</div>
+						<span id="imageStatus" class="image-status">No image selected</span>
+					</div>
+					<div
+						id="imagePreviewContainer"
+						style="display: none; margin-top: 15px"
+					>
+						<img
+							id="imagePreview"
+							src=""
+							alt="Image Preview"
+							style="
+								max-width: 200px;
+								max-height: 200px;
+								border-radius: 8px;
+								box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+							"
+						/>
+					</div>
+					<button type="submit">Add Product</button>
+				</form>
+			</div>
+
+			<!-- Products table will be injected by JS -->
+		</div>
+		<script src="product-management.js"></script>
+	</body>
+</html>

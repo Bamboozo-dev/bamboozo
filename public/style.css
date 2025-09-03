@@ -1,0 +1,201 @@
+body {
+	font-family: "Segoe UI", Arial, sans-serif;
+	background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+	min-height: 100vh;
+	margin: 0;
+	padding: 20px;
+}
+.container {
+	max-width: 95%;
+	width: 100%;
+	margin: 20px auto;
+	background: #fff;
+	padding: 20px;
+	border-radius: 16px;
+	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+	overflow-x: auto;
+}
+@media (min-width: 768px) {
+	.container {
+		max-width: 900px;
+		padding: 40px 32px;
+		margin: 60px auto;
+	}
+}
+h2 {
+	text-align: center;
+	margin-bottom: 32px;
+	font-weight: 600;
+	color: #333;
+}
+form,
+table {
+	width: 100%;
+}
+form {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+input,
+select {
+	padding: 12px;
+	border: 1px solid #bcdff1;
+	border-radius: 6px;
+	font-size: 1rem;
+	transition: border-color 0.2s;
+}
+input:focus,
+select:focus {
+	border-color: #007bff;
+	outline: none;
+}
+button {
+	padding: 12px 0;
+	background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+	color: #fff;
+	border: none;
+	border-radius: 6px;
+	font-size: 1rem;
+	font-weight: 500;
+	cursor: pointer;
+	box-shadow: 0 2px 8px rgba(0, 123, 255, 0.08);
+	transition: background 0.2s;
+}
+button:hover {
+	background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
+}
+div[id$="Msg"] {
+	margin-top: 12px;
+	color: #d9534f;
+	text-align: center;
+}
+p {
+	text-align: center;
+	color: #555;
+}
+a {
+	color: #007bff;
+	text-decoration: none;
+	font-weight: 500;
+}
+a:hover {
+	text-decoration: underline;
+}
+table {
+	border-collapse: collapse;
+	margin-top: 24px;
+	background: #fff;
+	border-radius: 12px;
+	overflow: hidden;
+	width: 100%;
+	min-width: 800px;
+	box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+}
+th,
+td {
+	padding: 16px 12px;
+	text-align: left;
+	word-break: break-word;
+	border-bottom: 1px solid #f0f0f0;
+}
+th {
+	background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+	color: white;
+	font-weight: 600;
+	font-size: 0.95rem;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+tr:nth-child(even) {
+	background: #f8fafc;
+}
+tr:hover {
+	background: #e3f2fd;
+	transition: background 0.2s;
+}
+td input,
+td select {
+	width: 100%;
+	min-width: 100px;
+	border: 1px solid #e0e6ed;
+	padding: 8px 10px;
+	border-radius: 4px;
+	font-size: 0.9rem;
+}
+td input:focus,
+td select:focus {
+	border-color: #007bff;
+	box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+td button {
+	padding: 6px 12px;
+	margin: 2px;
+	font-size: 0.85rem;
+	border-radius: 4px;
+	min-width: 70px;
+}
+select {
+	background: white;
+	cursor: pointer;
+}
+@media (max-width: 768px) {
+	.container {
+		padding: 15px;
+	}
+	table {
+		min-width: 600px;
+		font-size: 0.85rem;
+	}
+	th,
+	td {
+		padding: 10px 6px;
+	}
+	input,
+	select {
+		padding: 6px 8px;
+		font-size: 0.8rem;
+	}
+	button {
+		padding: 6px 8px;
+		font-size: 0.75rem;
+		min-width: 60px;
+	}
+}
+th {
+	background: #e3f2fd;
+	color: #007bff;
+	font-weight: 600;
+}
+tr:nth-child(even) {
+	background: #f8fafc;
+}
+tr:hover {
+	background: #e3f2fd;
+	transition: background 0.2s;
+}
+td input,
+td select {
+	width: 100%;
+	min-width: 100px;
+	border: 1px solid #e0e6ed;
+	padding: 8px 10px;
+	border-radius: 4px;
+	font-size: 0.9rem;
+}
+td input:focus,
+td select:focus {
+	border-color: #007bff;
+	box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+td button {
+	padding: 6px 12px;
+	margin: 2px;
+	font-size: 0.85rem;
+	border-radius: 4px;
+	min-width: 70px;
+}
+select {
+	background: white;
+	cursor: pointer;
+}
